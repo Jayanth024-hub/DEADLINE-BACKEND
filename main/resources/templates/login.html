@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Sign In — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <!-- Axios HTTP Client Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <a th:href="@{/}" class="auth-logo">
+                <span class="auth-symbol">IQ</span>
+                <span>DeadlineIQ Academic Portal</span>
+            </a>
+            <h2 class="auth-title">Institutional Sign In</h2>
+            <p class="auth-desc">Enter your campus credentials to access your academic dashboard</p>
+        </div>
+
+        <div id="error-alert" class="alert alert-danger" style="display: none;"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${info}" class="alert alert-info" th:text="${info}"></div>
+
+        <!-- Credentials Sign-In Form (Manual Entry) -->
+        <form id="loginForm" th:action="@{/login}" method="post">
+            <input type="hidden" name="redirect" th:value="${redirect}" th:if="${redirect}">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control"
+                       th:value="${enteredEmail}" placeholder="e.g. name@domain.com" required autofocus autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                    <label for="password" class="form-label" style="margin-bottom: 0;">Password</label>
+                </div>
+                <input type="password" id="password" name="password" class="form-control"
+                       placeholder="Enter your account password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; padding: 0.65rem; margin-top: 0.75rem;">
+                Sign In
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0; font-size: 0.85rem; color: #64748b;">
+            Don't have an account yet? <a th:href="@{/register}" style="color: #2563eb; font-weight: 600; text-decoration: none;">Register New Account</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Clear any previous session tokens on login screen
+    localStorage.removeItem('deadlineiq_token');
+    localStorage.removeItem('deadlineiq_user');
+
+    // Modern Axios Asynchronous Login
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const errorAlert = document.getElementById('error-alert');
+        const submitBtn = document.getElementById('submitBtn');
+
+        errorAlert.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Authenticating...';
+
+        try {
+            const response = await axios.post('/api/auth/login', {
+                email: email,
+                password: password
+            });
+
+            if (response.data.success) {
+                localStorage.setItem('deadlineiq_token', response.data.token);
+                localStorage.setItem('deadlineiq_user', JSON.stringify(response.data.user));
+                window.location.href = response.data.redirectUrl;
+            }
+        } catch (err) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+            errorAlert.textContent = err.response?.data?.error || 'Authentication failed. Please verify your email and password.';
+            errorAlert.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>

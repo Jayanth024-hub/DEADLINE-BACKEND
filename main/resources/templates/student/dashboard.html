@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <!-- Axios HTTP Client Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-badge">IQ</div>
+            <span class="sidebar-title">DeadlineIQ</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a th:href="@{/student/dashboard}">Overview</a></li>
+            <li><a href="#deadlines-table-section">Course Deadlines</a></li>
+            <li><a th:href="@{/student/profile}">Student Profile</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="width: 100%; border-color: #334155; color: #f87171; background: transparent;">
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="app-main">
+        <header class="app-header">
+            <div class="header-user-info">
+                <h4>Welcome, <span th:text="${user.name}">Student</span></h4>
+                <p th:text="${user.department} + ' • ' + ${user.year} + ' (' + ${user.section} + ')'">Department & Section</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a th:href="@{/student/profile}" class="btn btn-outline btn-sm">Edit Profile</a>
+                <span class="role-pill-sm badge-status badge-upcoming">STUDENT</span>
+                <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca; font-weight: 500;">
+                    Sign Out
+                </a>
+            </div>
+        </header>
+
+        <main class="app-body">
+            <!-- Metrics Row (Dynamic Axios Target) -->
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <span class="caption">Total Deadlines</span>
+                    <span id="stat-total" class="value" th:text="${totalDeadlines}">5</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Pending</span>
+                    <span id="stat-pending" class="value" style="color: #d97706;" th:text="${pendingDeadlines}">5</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Completed</span>
+                    <span id="stat-completed" class="value" style="color: #16a34a;" th:text="${completedDeadlines}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Due Soon</span>
+                    <span id="stat-due-soon" class="value" style="color: #2563eb;" th:text="${dueSoonDeadlines}">1</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Overdue</span>
+                    <span id="stat-overdue" class="value" style="color: #dc2626;" th:text="${overdueDeadlines}">1</span>
+                </div>
+            </div>
+
+            <!-- Progress Meter -->
+            <div class="panel">
+                <div class="panel-body" style="padding: 1rem 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Semester Submission Progress</span>
+                        <span id="stat-percentage" style="font-size: 0.85rem; font-weight: 700; color: #2563eb;" th:text="${completionPercentage} + '% Completed'">0% Completed</span>
+                    </div>
+                    <div class="meter-bg">
+                        <div id="progress-fill" class="meter-fill" th:style="'width: ' + ${completionPercentage} + '%;'"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deadlines Table Section -->
+            <div id="deadlines-table-section" class="panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="panel-title">Active Deadlines &amp; Course Tasks</span>
+                        <span style="font-size: 0.775rem; color: #64748b; margin-left: 0.5rem;">(Live sync via Axios)</span>
+                    </div>
+                    <!-- Add Deadline Button -->
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openAddModal()">
+                        + Add Deadline
+                    </button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Task / Course</th>
+                            <th>Category</th>
+                            <th>Due Date</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deadlines-table-body">
+                        <tr th:each="deadline : ${deadlines}" th:id="'row-' + ${deadline.id}">
+                            <td>
+                                <div class="task-title" th:text="${deadline.title}">Course Task</div>
+                                <div class="task-sub" th:text="'Section: ' + ${deadline.targetSection} + ' • ' + ${deadline.description}">Details</div>
+                            </td>
+                            <td th:text="${deadline.category}">Category</td>
+                            <td th:text="${deadline.dueDate}">2026-09-24</td>
+                            <td>
+                                <span class="badge-prio"
+                                      th:classappend="${deadline.priority.name() == 'HIGH' ? 'prio-high' : (deadline.priority.name() == 'MEDIUM' ? 'prio-med' : 'prio-low')}"
+                                      th:text="${deadline.priority}">
+                                    HIGH
+                                </span>
+                            </td>
+                            <td>
+                                <span th:id="'status-badge-' + ${deadline.id}"
+                                      class="badge-status"
+                                      th:classappend="${deadline.completed ? 'badge-completed' : (deadline.status.name() == 'DUE_TODAY' ? 'badge-due-today' : (deadline.status.name() == 'DUE_SOON' ? 'badge-due-soon' : (deadline.status.name() == 'OVERDUE' ? 'badge-overdue' : 'badge-upcoming')))}"
+                                      th:text="${deadline.completed ? 'COMPLETED' : deadline.status}">
+                                    UPCOMING
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.35rem;">
+                                    <button type="button"
+                                            th:id="'btn-complete-' + ${deadline.id}"
+                                            th:onclick="'toggleCompletion(' + ${deadline.id} + ')'"
+                                            class="btn btn-outline btn-sm"
+                                            th:text="${deadline.completed ? 'Reopen' : 'Mark Done'}">
+                                        Mark Done
+                                    </button>
+                                    <button type="button"
+                                            th:onclick="'deleteDeadlineItem(' + ${deadline.id} + ')'"
+                                            class="btn btn-outline btn-sm"
+                                            style="color: #ef4444; border-color: #fecaca;">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal: Add New Deadline -->
+<div id="addDeadlineModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h5 class="modal-title">Create New Deadline</h5>
+            <button type="button" class="modal-close" onclick="closeAddModal()">&times;</button>
+        </div>
+
+        <form id="addDeadlineForm" onsubmit="submitNewDeadline(event)">
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label" style="font-size: 0.825rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                        Deadline Title
+                    </label>
+                    <input type="text" id="modalTitle" class="form-control" placeholder="e.g. Mini Project Presentation Slides" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.825rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                            Category
+                        </label>
+                        <select id="modalCategory" class="form-control" required>
+                            <option value="ASSIGNMENT">Assignment</option>
+                            <option value="EXAM">Exam</option>
+                            <option value="LAB">Lab Record</option>
+                            <option value="PROJECT">Project</option>
+                            <option value="INTERNSHIP">Internship</option>
+                            <option value="PLACEMENT">Placement</option>
+                            <option value="HACKATHON">Hackathon</option>
+                            <option value="CERTIFICATION">Certification</option>
+                            <option value="EVENT">Event</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.825rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                            Priority
+                        </label>
+                        <select id="modalPriority" class="form-control" required>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM" selected>MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label" style="font-size: 0.825rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                        Due Date
+                    </label>
+                    <input type="date" id="modalDueDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="font-size: 0.825rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                        Description / Notes (Optional)
+                    </label>
+                    <textarea id="modalDescription" class="form-control" rows="2" placeholder="Key deliverables or submission guidelines..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeAddModal()">Cancel</button>
+                <button type="submit" id="saveDeadlineBtn" class="btn btn-primary">Save Deadline</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Axios Async Scripts -->
+<script>
+    function openAddModal() {
+        // Default due date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('modalDueDate').value = tomorrow.toISOString().split('T')[0];
+        document.getElementById('addDeadlineModal').style.display = 'flex';
+    }
+
+    function closeAddModal() {
+        document.getElementById('addDeadlineModal').style.display = 'none';
+        document.getElementById('addDeadlineForm').reset();
+    }
+
+    // Axios POST: Create new deadline
+    async function submitNewDeadline(e) {
+        e.preventDefault();
+        const btn = document.getElementById('saveDeadlineBtn');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        const payload = {
+            title: document.getElementById('modalTitle').value.trim(),
+            category: document.getElementById('modalCategory').value,
+            priority: document.getElementById('modalPriority').value,
+            dueDate: document.getElementById('modalDueDate').value,
+            description: document.getElementById('modalDescription').value.trim(),
+            targetClass: 'Personal',
+            targetSection: 'All'
+        };
+
+        try {
+            const response = await axios.post('/api/deadlines', payload);
+            if (response.data && response.data.id) {
+                const item = response.data;
+                closeAddModal();
+
+                // Append new row dynamically into the table
+                const tbody = document.getElementById('deadlines-table-body');
+                const tr = document.createElement('tr');
+                tr.id = 'row-' + item.id;
+                tr.innerHTML = `
+                    <td>
+                        <div class="task-title">${escapeHtml(item.title)}</div>
+                        <div class="task-sub">Section: ${escapeHtml(item.targetSection || 'Personal')} • ${escapeHtml(item.description || 'Personal deadline')}</div>
+                    </td>
+                    <td>${item.category}</td>
+                    <td>${item.dueDate}</td>
+                    <td><span class="badge-prio ${item.priority === 'HIGH' ? 'prio-high' : (item.priority === 'MEDIUM' ? 'prio-med' : 'prio-low')}">${item.priority}</span></td>
+                    <td><span id="status-badge-${item.id}" class="badge-status ${getBadgeClass(item.status)}">${item.status}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 0.35rem;">
+                            <button type="button" id="btn-complete-${item.id}" onclick="toggleCompletion(${item.id})" class="btn btn-outline btn-sm">Mark Done</button>
+                            <button type="button" onclick="deleteDeadlineItem(${item.id})" class="btn btn-outline btn-sm" style="color: #ef4444; border-color: #fecaca;">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.prepend(tr);
+
+                // Refresh metrics counters and progress bar live
+                refreshStats();
+            }
+        } catch (err) {
+            alert('Error adding deadline: ' + (err.response?.data?.error || err.message));
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Save Deadline';
+        }
+    }
+
+    // Axios PUT: Toggle completion
+    async function toggleCompletion(deadlineId) {
+        const btn = document.getElementById('btn-complete-' + deadlineId);
+        const badge = document.getElementById('status-badge-' + deadlineId);
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+
+        try {
+            const response = await axios.put('/api/deadlines/' + deadlineId + '/complete');
+            if (response.data.success) {
+                const isCompleted = response.data.completed;
+                const newStatus = response.data.status;
+
+                if (isCompleted) {
+                    badge.className = 'badge-status badge-completed';
+                    badge.textContent = 'COMPLETED';
+                    btn.textContent = 'Reopen';
+                } else {
+                    badge.className = 'badge-status ' + getBadgeClass(newStatus);
+                    badge.textContent = newStatus;
+                    btn.textContent = 'Mark Done';
+                }
+
+                refreshStats();
+            }
+        } catch (err) {
+            alert('Failed to update deadline: ' + (err.response?.data?.error || err.message));
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // Axios DELETE: Delete deadline
+    async function deleteDeadlineItem(deadlineId) {
+        if (!confirm('Are you sure you want to delete this deadline?')) return;
+
+        try {
+            const res = await axios.delete('/api/deadlines/' + deadlineId);
+            if (res.data.success) {
+                const row = document.getElementById('row-' + deadlineId);
+                if (row) row.remove();
+                refreshStats();
+            }
+        } catch (err) {
+            alert('Failed to delete deadline: ' + (err.response?.data?.error || err.message));
+        }
+    }
+
+    // Refresh metrics counters
+    async function refreshStats() {
+        try {
+            const res = await axios.get('/api/deadlines/stats');
+            const data = res.data;
+
+            document.getElementById('stat-total').textContent = data.total;
+            document.getElementById('stat-pending').textContent = data.pending;
+            document.getElementById('stat-completed').textContent = data.completed;
+            document.getElementById('stat-due-soon').textContent = data.dueSoon;
+            document.getElementById('stat-overdue').textContent = data.overdue;
+
+            document.getElementById('stat-percentage').textContent = data.percentage + '% Completed';
+            document.getElementById('progress-fill').style.width = data.percentage + '%';
+        } catch (err) {
+            console.error('Error refreshing metrics', err);
+        }
+    }
+
+    function getBadgeClass(status) {
+        switch (status) {
+            case 'DUE_TODAY': return 'badge-due-today';
+            case 'DUE_SOON': return 'badge-due-soon';
+            case 'OVERDUE': return 'badge-overdue';
+            case 'COMPLETED': return 'badge-completed';
+            default: return 'badge-upcoming';
+        }
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function logoutUser() {
+        localStorage.removeItem('deadlineiq_token');
+        localStorage.removeItem('deadlineiq_user');
+    }
+</script>
+
+</body>
+</html>

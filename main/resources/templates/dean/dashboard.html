@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dean's Office — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-badge">IQ</div>
+            <span class="sidebar-title">Dean's Office</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a th:href="@{/dean/dashboard}">Institution Overview</a></li>
+            <li><a href="#upcoming">Upcoming Milestones</a></li>
+            <li><a href="#community">Campus Community</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a th:href="@{/logout}" class="btn btn-outline btn-sm" style="width: 100%; border-color: #334155; color: #f87171; background: transparent;">Sign Out</a>
+        </div>
+    </aside>
+
+    <div class="app-main">
+        <header class="app-header">
+            <div class="header-user-info">
+                <h4>Institutional Academic Overview</h4>
+                <p th:text="'Welcome, ' + ${user.name}">Welcome, Dean</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="role-pill-sm badge-status badge-due-soon">DEAN</span>
+                <a th:href="@{/logout}" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca; font-weight: 500;">Sign Out</a>
+            </div>
+        </header>
+
+        <main class="app-body">
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <span class="caption">Tracked Milestones</span>
+                    <span class="value" th:text="${totalDeadlines}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Completed</span>
+                    <span class="value" style="color: #16a34a;" th:text="${completedDeadlines}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Overdue</span>
+                    <span class="value" style="color: #dc2626;" th:text="${overdueDeadlines}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Completion Rate</span>
+                    <span class="value" style="color: #7c3aed;" th:text="${completionRate} + '%'">0%</span>
+                </div>
+            </div>
+
+            <div class="metrics-row" id="community">
+                <div class="metric-card">
+                    <span class="caption">Students</span>
+                    <span class="value" style="color: #2563eb;" th:text="${totalStudents}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Faculty</span>
+                    <span class="value" style="color: #16a34a;" th:text="${totalFaculty}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Academic Groups</span>
+                    <span class="value" style="color: #7c3aed;" th:text="${courseCount}">0</span>
+                </div>
+            </div>
+
+            <div class="panel" id="upcoming">
+                <div class="panel-header">
+                    <span class="panel-title">Upcoming Institutional Milestones</span>
+                </div>
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>Milestone</th>
+                        <th>Target Group</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="deadline : ${upcomingDeadlines}">
+                        <td th:text="${deadline.title}">Academic milestone</td>
+                        <td th:text="${deadline.targetClass} + ' • ' + ${deadline.targetSection}">All students</td>
+                        <td th:text="${deadline.dueDate}">Due date</td>
+                        <td><span class="badge-status badge-upcoming" th:text="${deadline.status}">UPCOMING</span></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(upcomingDeadlines)}">
+                        <td colspan="4">There are no upcoming milestones to review.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
