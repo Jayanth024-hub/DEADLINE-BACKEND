@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Console — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-badge">IQ</div>
+            <span class="sidebar-title">DeadlineIQ Admin</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">User Directory</a></li>
+            <li><a href="#">Departments &amp; Branches</a></li>
+            <li><a href="#">Global Deadlines</a></li>
+            <li><a href="#">System Configuration</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="width: 100%; border-color: #334155; color: #f87171; background: transparent;">
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <div class="app-main">
+        <header class="app-header">
+            <div class="header-user-info">
+                <h4>System Administration Console</h4>
+                <p th:text="'Logged in as: ' + ${user.name}">Campus Administrator</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="role-pill-sm badge-status badge-overdue">ADMIN</span>
+                <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca; font-weight: 500;">
+                    Sign Out
+                </a>
+            </div>
+        </header>
+
+        <main class="app-body">
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <span class="caption">Total Registered Users</span>
+                    <span class="value" th:text="${totalUsers}">5</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Students</span>
+                    <span class="value" style="color: #2563eb;" th:text="${totalStudents}">2</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Faculty</span>
+                    <span class="value" style="color: #16a34a;" th:text="${totalFaculty}">1</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Coordinators</span>
+                    <span class="value" style="color: #d97706;" th:text="${totalCoordinators}">1</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Deans</span>
+                    <span class="value" style="color: #7c3aed;" th:text="${totalDeans}">0</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Institutional Deadlines</span>
+                    <span class="value" style="color: #1e3a8a;" th:text="${totalDeadlines}">36</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Institutional User Directory (Live Sync)</span>
+                    <a th:href="@{/register}" class="btn btn-primary btn-sm">+ Register New User</a>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Email Address</th>
+                            <th>Role</th>
+                            <th>Department / Section</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${allUsers}">
+                            <td th:text="${u.name}">User Name</td>
+                            <td><span class="code-pill" th:text="${u.email}">user@deadlineiq.com</span></td>
+                            <td>
+                                <span class="badge-status"
+                                      th:classappend="${u.role.name() == 'STUDENT' ? 'badge-upcoming' : (u.role.name() == 'FACULTY' ? 'badge-completed' : (u.role.name() == 'COORDINATOR' ? 'badge-due-soon' : 'badge-overdue'))}"
+                                      th:text="${u.role}">
+                                    STUDENT
+                                </span>
+                            </td>
+                            <td th:text="${u.department} + (${u.section != null and u.section != ''} ? ' • ' + ${u.section} : '')">Department</td>
+                            <td><span style="color: #16a34a; font-weight: 600;">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+</div>
+
+<script>
+    function logoutUser() {
+        localStorage.removeItem('deadlineiq_token');
+        localStorage.removeItem('deadlineiq_user');
+    }
+</script>
+
+</body>
+</html>

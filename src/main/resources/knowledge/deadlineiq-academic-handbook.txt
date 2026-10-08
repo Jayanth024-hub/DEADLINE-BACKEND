@@ -1,0 +1,58 @@
+================================================================================
+DEADLINEIQ OFFICIAL ACADEMIC HANDBOOK & CALENDAR (CSE / ENGINEERING)
+================================================================================
+
+1. ACADEMIC CALENDAR & EXAMINATION TIMELINES
+- Semester Term: Autumn - Spring Academic Year 2026-2027.
+- Midterm 1 Examinations: November 10 to November 15, 2026. Hall tickets available 3 days prior.
+- Midterm 2 Examinations: January 18 to January 23, 2027.
+- Practical / Laboratory Internal Assessments: February 20 to February 25, 2027.
+- Final Semester End Theory Examinations: March 1 to March 15, 2027.
+- Mandatory Minimum Attendance: 75% overall attendance is required to be eligible for semester end examinations.
+
+2. CORE COURSE ASSIGNMENTS & DELIVERABLES
+- Operating Systems (OS):
+  * Assignment Title: CPU Scheduling Simulation (FCFS, Round Robin, and Priority Scheduling algorithms with Gantt chart generation).
+  * Submission Window: Due within 2 days (October 10, 2026).
+  * Priority: High / Urgent.
+  * Course Faculty: Dr. R. Sharma (CSE Department).
+  * Submission Guidelines: Submit zipped Java or C++ source code with terminal simulation screenshots via the student portal.
+
+- Database Management Systems (DBMS):
+  * Project Title: Phase 2 Relational Schema Normalization & Architecture.
+  * Requirements: Deliver normalized ER schemas up to BCNF (Boyce-Codd Normal Form) along with MySQL DDL creation scripts and sample data population queries.
+  * Submission Window: Due within 5 days (October 13, 2026).
+  * Priority: High.
+  * Course Faculty: Dr. R. Sharma (CSE Department).
+
+- Machine Learning (ML):
+  * Assessment: Midterm Exam & Lab Project.
+  * Topics: Linear & Logistic Regression, Gradient Descent, Backpropagation, Convolutional Neural Networks (CNN), and Hyperparameter Tuning.
+  * Date: Due in 9 days (October 17, 2026).
+  * Priority: Medium.
+
+- Java Programming:
+  * Deliverable: Concurrency & Multithreading Thread-Pool Executor Lab Assessment.
+  * Faculty: Dr. R. Sharma.
+
+3. CAMPUS RECRUITMENT DRIVES & CAREER OPPORTUNITIES
+- Google Summer Software Engineering Intern 2027:
+  * Company: Google LLC.
+  * Role: Software Engineering Intern - Summer 2027 (Cloud Infrastructure & Core AI Systems).
+  * Eligibility Criteria: Enrolled B.Tech CSE / IT students with CGPA >= 7.5 and no active backlogs.
+  * Stipend: Rs 1,25,000 per month with complete mentorship and return offer opportunities.
+  * Application Deadline: Closes in 14 days (October 22, 2026).
+  * Coordinator: Prof. K. Venkatesh (ECE / Placement Cell).
+
+- Microsoft Imagine Cup & AI Hackathon 2026:
+  * Organizer: Microsoft Corporation.
+  * Event: Imagine Cup Global AI Hackathon.
+  * Eligibility: Open to all undergraduate engineering students across departments (CSE, ECE, EEE, AIML, Cyber Security).
+  * Focus Areas: Generative AI, Cloud Systems, Autonomous Agents, and Environmental Sustainability.
+  * Prize Pool: $100,000 USD and mentorship from Microsoft engineering leaders.
+  * Registration Deadline: Closes in 8 days (October 16, 2026).
+
+4. UNIVERSITY POLICIES
+- Late Submission Policy: Submissions delayed up to 24 hours incur a 10% grade penalty. Submissions beyond 3 days late are not evaluated without prior medical documentation.
+- Project Teams: Maximum 4 students per team for the DBMS and Capstone project deliverables.
+================================================================================

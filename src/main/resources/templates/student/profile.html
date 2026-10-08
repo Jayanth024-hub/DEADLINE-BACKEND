@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-badge">IQ</div>
+            <span class="sidebar-title">DeadlineIQ</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a th:href="@{/student/dashboard}">Overview</a></li>
+            <li><a th:href="@{/student/dashboard}">Course Deadlines</a></li>
+            <li><a th:href="@{/student/dashboard}">Placement Drives</a></li>
+            <li class="active"><a th:href="@{/student/profile}">Student Profile</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="width: 100%; border-color: #334155; color: #f87171; background: transparent;">
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="app-main">
+        <header class="app-header">
+            <div class="header-user-info">
+                <h4>My Profile Settings</h4>
+                <p>Manage your student identity and academic section details</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <a th:href="@{/student/dashboard}" class="btn btn-outline btn-sm">← Back to Dashboard</a>
+                <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca; font-weight: 500;">
+                    Sign Out
+                </a>
+            </div>
+        </header>
+
+        <main class="app-body" style="max-width: 720px;">
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Edit Profile Information</span>
+                    <span class="role-pill-sm badge-status badge-upcoming" th:text="${user.role}">STUDENT</span>
+                </div>
+
+                <div class="panel-body">
+                    <form th:action="@{/student/profile}" method="post">
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                Registered Campus Email
+                            </label>
+                            <input type="email" class="form-control" th:value="${user.email}" readonly
+                                   style="background: #f1f5f9; cursor: not-allowed; color: #64748b;">
+                            <small style="color: #64748b; font-size: 0.775rem;">Your institutional email is permanent and cannot be modified.</small>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                Full Name
+                            </label>
+                            <input type="text" name="name" class="form-control" th:value="${user.name}" required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                    Department / Branch
+                                </label>
+                                <input type="text" name="department" class="form-control" th:value="${user.department}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                    Year of Study
+                                </label>
+                                <input type="text" name="year" class="form-control" th:value="${user.year}">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                Class Section (e.g. Section A, Section B)
+                            </label>
+                            <input type="text" name="section" class="form-control" th:value="${user.section}">
+                            <small style="color: #64748b; font-size: 0.775rem;">Your section determines which course deadlines appear on your dashboard.</small>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+                            <label class="form-label" style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.35rem;">
+                                Change Password (Optional)
+                            </label>
+                            <input type="password" name="password" class="form-control" placeholder="Leave blank to keep your current password">
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                            <a th:href="@{/student/dashboard}" class="btn btn-outline">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+</div>
+
+<script>
+    function logoutUser() {
+        localStorage.removeItem('deadlineiq_token');
+        localStorage.removeItem('deadlineiq_user');
+    }
+</script>
+
+</body>
+</html>
