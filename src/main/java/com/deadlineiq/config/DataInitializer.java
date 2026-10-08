@@ -4,6 +4,7 @@ import com.deadlineiq.model.*;
 import com.deadlineiq.repository.DeadlineRepository;
 import com.deadlineiq.repository.OpportunityRepository;
 import com.deadlineiq.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,72 +21,83 @@ public class DataInitializer implements CommandLineRunner {
     private final DeadlineRepository deadlineRepository;
     private final OpportunityRepository opportunityRepository;
     private final PasswordEncoder passwordEncoder;
+    private final String demoSeedPassword;
 
-    public DataInitializer(UserRepository userRepository, DeadlineRepository deadlineRepository, OpportunityRepository opportunityRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(
+            UserRepository userRepository,
+            DeadlineRepository deadlineRepository,
+            OpportunityRepository opportunityRepository,
+            PasswordEncoder passwordEncoder,
+            @Value("${DEMO_SEED_PASSWORD:}") String demoSeedPassword) {
         this.userRepository = userRepository;
         this.deadlineRepository = deadlineRepository;
         this.opportunityRepository = opportunityRepository;
         this.passwordEncoder = passwordEncoder;
+        this.demoSeedPassword = demoSeedPassword;
     }
 
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
-            System.out.println("🌱 Initializing default campus users in MySQL database...");
+            if (demoSeedPassword.isBlank()) {
+                System.out.println("DEMO_SEED_PASSWORD is not set; skipping demo user initialization.");
+            } else {
+                System.out.println("🌱 Initializing default campus users in MySQL database...");
 
-            User student = new User(
-                    null,
-                    "Sai Jayanth",
-                    "student@deadlineiq.com",
-                    passwordEncoder.encode("password123"),
-                    Role.STUDENT,
-                    "CSE",
-                    null,
-                    "3rd Year",
-                    "Section A"
-            );
-            userRepository.save(student);
+                User student = new User(
+                        null,
+                        "Sai Jayanth",
+                        "student@deadlineiq.com",
+                        passwordEncoder.encode(demoSeedPassword),
+                        Role.STUDENT,
+                        "CSE",
+                        null,
+                        "3rd Year",
+                        "Section A"
+                );
+                userRepository.save(student);
 
-            User faculty = new User(
-                    null,
-                    "Dr. R. Sharma",
-                    "faculty@deadlineiq.com",
-                    passwordEncoder.encode("password123"),
-                    Role.FACULTY,
-                    "CSE",
-                    "Java",
-                    null,
-                    null
-            );
-            userRepository.save(faculty);
+                User faculty = new User(
+                        null,
+                        "Dr. R. Sharma",
+                        "faculty@deadlineiq.com",
+                        passwordEncoder.encode(demoSeedPassword),
+                        Role.FACULTY,
+                        "CSE",
+                        "Java",
+                        null,
+                        null
+                );
+                userRepository.save(faculty);
 
-            User coordinator = new User(
-                    null,
-                    "Prof. K. Venkatesh",
-                    "coordinator@deadlineiq.com",
-                    passwordEncoder.encode("password123"),
-                    Role.COORDINATOR,
-                    "ECE",
-                    null,
-                    null,
-                    null
-            );
-            userRepository.save(coordinator);
+                User coordinator = new User(
+                        null,
+                        "Prof. K. Venkatesh",
+                        "coordinator@deadlineiq.com",
+                        passwordEncoder.encode(demoSeedPassword),
+                        Role.COORDINATOR,
+                        "ECE",
+                        null,
+                        null,
+                        null
+                );
+                userRepository.save(coordinator);
 
-            User admin = new User(
-                    null,
-                    "System Administrator",
-                    "admin@deadlineiq.com",
-                    passwordEncoder.encode("password123"),
-                    Role.ADMIN,
-                    "CSE",
-                    null,
-                    null,
-                    null
-            );
-            userRepository.save(admin);
+                User admin = new User(
+                        null,
+                        "System Administrator",
+                        "admin@deadlineiq.com",
+                        passwordEncoder.encode(demoSeedPassword),
+                        Role.ADMIN,
+                        "CSE",
+                        null,
+                        null,
+                        null
+                );
+                userRepository.save(admin);
 
-            System.out.println("✅ Seed users created in MySQL (student, faculty, coordinator, admin).");
+                System.out.println("✅ Seed users created in MySQL (student, faculty, coordinator, admin).");
+            }
         }
 
         if (deadlineRepository.count() == 0) {

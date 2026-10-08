@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"}, allowCredentials = "true")
 public class AdminApiController {
 
     private final UserService userService;
@@ -69,7 +68,7 @@ public class AdminApiController {
         }
 
         if (password == null || password.trim().isEmpty()) {
-            password = "password123";
+            return ResponseEntity.badRequest().body(Map.of("error", "Password is required."));
         }
 
         User user = new User(
