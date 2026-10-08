@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <!-- Axios HTTP Client Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width: 480px;">
+        <div class="auth-header">
+            <a th:href="@{/}" class="auth-logo">
+                <span class="auth-symbol">IQ</span>
+                <span>DeadlineIQ Academic Portal</span>
+            </a>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-desc">Register any new student, faculty, or coordinator account</p>
+        </div>
+
+        <div id="reg-error" class="alert alert-danger" style="display: none;"></div>
+        <div id="reg-success" class="alert alert-success" style="display: none;"></div>
+
+        <!-- Axios-Driven Dynamic Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Rahul Sharma" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="e.g. rahul@college.edu or rahul@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Choose a password" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="role" class="form-label">Select Role</label>
+                    <select id="role" name="role" class="form-control" required>
+                        <option value="STUDENT" selected>Student</option>
+                        <option value="FACULTY">Faculty</option>
+                        <option value="COORDINATOR">Coordinator</option>
+                        <option value="DEAN">Dean</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="department" class="form-label">Department / Branch</label>
+                    <input type="text" id="department" name="department" class="form-control" value="Computer Science & Engineering" required>
+                </div>
+            </div>
+
+            <div id="student-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="year" class="form-label">Year of Study</label>
+                    <input type="text" id="year" name="year" class="form-control" value="3rd Year">
+                </div>
+                <div class="form-group">
+                    <label for="section" class="form-label">Class Section</label>
+                    <input type="text" id="section" name="section" class="form-control" value="Section A">
+                </div>
+            </div>
+
+            <button type="submit" id="regBtn" class="btn btn-primary" style="width: 100%; padding: 0.65rem; margin-top: 0.5rem;">
+                Register &amp; Sign In
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.825rem; color: #64748b;">
+            Already have an account? <a th:href="@{/login}" style="color: #2563eb; font-weight: 500;">Sign in directly</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle student-specific fields when role changes
+    document.getElementById('role').addEventListener('change', function() {
+        const studentFields = document.getElementById('student-fields');
+        if (this.value === 'STUDENT') {
+            studentFields.style.display = 'grid';
+        } else {
+            studentFields.style.display = 'none';
+        }
+    });
+
+    // Axios Asynchronous Registration + Auto-Login
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+        const department = document.getElementById('department').value.trim() || 'Computer Science & Engineering';
+        const year = document.getElementById('year').value.trim() || '3rd Year';
+        const section = document.getElementById('section').value.trim() || 'Section A';
+
+        const errorBox = document.getElementById('reg-error');
+        const successBox = document.getElementById('reg-success');
+        const regBtn = document.getElementById('regBtn');
+
+        errorBox.style.display = 'none';
+        successBox.style.display = 'none';
+        regBtn.disabled = true;
+        regBtn.textContent = 'Registering user...';
+
+        try {
+            // 1. Call Register REST API
+            const regResponse = await axios.post('/api/auth/register', {
+                name: name,
+                email: email,
+                password: password,
+                role: role,
+                department: department,
+                year: year,
+                section: section
+            });
+
+            if (regResponse.data.success) {
+                successBox.textContent = 'Account created successfully! Signing you in...';
+                successBox.style.display = 'block';
+
+                // 2. Automatically log in the newly registered user
+                const loginResponse = await axios.post('/api/auth/login', {
+                    email: email,
+                    password: password
+                });
+
+                if (loginResponse.data.success) {
+                    localStorage.setItem('deadlineiq_token', loginResponse.data.token);
+                    localStorage.setItem('deadlineiq_user', JSON.stringify(loginResponse.data.user));
+
+                    // Redirect to their newly created dashboard
+                    setTimeout(() => {
+                        window.location.href = loginResponse.data.redirectUrl;
+                    }, 500);
+                } else {
+                    window.location.href = '/login?registered=true';
+                }
+            }
+        } catch (err) {
+            regBtn.disabled = false;
+            regBtn.textContent = 'Register & Sign In';
+            errorBox.textContent = err.response?.data?.error || 'Registration failed. Please verify details.';
+            errorBox.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>

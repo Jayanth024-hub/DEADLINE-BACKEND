@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName} + ' — Academic & Career Deadline Management'">DeadlineIQ — Academic & Career Deadline Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="modern-theme">
+
+    <!-- Top Navigation -->
+    <header class="navbar-modern">
+        <div class="navbar-modern-inner">
+            <a th:href="@{/}" class="brand-modern">
+                <div class="brand-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="brand-text-wrapper">
+                    <span class="brand-title-text">Deadline<span>IQ</span></span>
+                </div>
+            </a>
+
+            <ul class="nav-links-modern">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#roles">Roles</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a th:href="@{/ai-chat}">AI Assistant</a></li>
+            </ul>
+
+            <div class="nav-actions-modern">
+                <a th:href="@{/register}" class="btn-pill-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Register</a>
+                <a th:href="@{/login}" class="btn-nav-login">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section (Reference Design) -->
+    <section class="hero-modern-section">
+        <div class="hero-modern-grid">
+            <div>
+                <!-- Badge Pill -->
+                <div class="hero-badge-capsule">
+                    <span>🎓</span>
+                    <span>Academic &amp; Career Management</span>
+                </div>
+
+                <!-- Hero Heading -->
+                <h1 class="hero-main-heading">
+                    Never Miss<br>
+                    <span class="gradient-text-accent">What Matters.</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="hero-lead-text">
+                    DeadlineIQ is a centralized platform for managing academic deadlines, assignments, placement drives, internships, hackathons and career opportunities.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="hero-cta-bar">
+                    <a th:href="@{/register}" class="btn-pill-primary">
+                        <span>Get Started</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-pill-secondary">Explore Features</a>
+                </div>
+
+                <!-- Metrics Strip -->
+                <div class="hero-stats-strip">
+                    <div class="stat-box-modern">
+                        <span class="stat-box-number">4</span>
+                        <span class="stat-box-label">User Roles</span>
+                    </div>
+                    <div class="stat-v-divider"></div>
+                    <div class="stat-box-modern">
+                        <span class="stat-box-number">6</span>
+                        <span class="stat-box-label">Core Features</span>
+                    </div>
+                    <div class="stat-v-divider"></div>
+                    <div class="stat-box-modern">
+                        <span class="stat-box-number" style="color: #2563eb;">MySQL</span>
+                        <span class="stat-box-label">Relational Storage</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Illustration Visual -->
+            <div class="hero-stage-container">
+                <img th:src="@{/images/hero-illustration.png}" alt="DeadlineIQ Academic Management System" class="hero-stage-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- 6-Card Feature Strip (Matching Reference Image Bottom Row) -->
+    <div id="features" class="features-strip-container">
+        <div class="features-strip-grid">
+            <!-- 1. Smart Deadline Tracking -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Smart Deadline<br>Tracking</div>
+            </div>
+
+            <!-- 2. Role-Based Management -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Role-Based<br>Management</div>
+            </div>
+
+            <!-- 3. Academic Assignments -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-coral">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Academic<br>Assignments</div>
+            </div>
+
+            <!-- 4. Career Opportunities -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-amber">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Career<br>Opportunities</div>
+            </div>
+
+            <!-- 5. Registration Tracking -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-teal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Registration<br>Tracking</div>
+            </div>
+
+            <!-- 6. Real-Time Status / AI -->
+            <div class="strip-item-card">
+                <div class="pastel-icon-circle bg-soft-purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <div class="strip-item-title">Real-Time<br>Status &amp; AI</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="modern-section" style="background: #f8fafc; border-top: 1px solid #eef2f6; border-bottom: 1px solid #eef2f6;">
+        <div class="section-head-center">
+            <span class="section-tag-pill">Workflow Simplicity</span>
+            <h2 class="section-title-modern">How DeadlineIQ Works</h2>
+            <p class="section-subtitle-modern">A streamlined three-step workflow ensuring zero missed submissions across all departments.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+            <div style="background: #ffffff; padding: 2.25rem; border-radius: 20px; border: 1px solid #eef2f6; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+                <div style="font-size: 2.5rem; font-weight: 800; color: #dbeafe; line-height: 1; margin-bottom: 1rem;">01</div>
+                <h4 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Join Class Section</h4>
+                <p style="font-size: 0.95rem; color: #64748b; line-height: 1.6;">Register with your college email. Automatically synchronize with designated courses, assignments, and class announcements.</p>
+            </div>
+
+            <div style="background: #ffffff; padding: 2.25rem; border-radius: 20px; border: 1px solid #eef2f6; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+                <div style="font-size: 2.5rem; font-weight: 800; color: #dbeafe; line-height: 1; margin-bottom: 1rem;">02</div>
+                <h4 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Smart Prioritization</h4>
+                <p style="font-size: 0.95rem; color: #64748b; line-height: 1.6;">Our dynamic engine calculates cutoff urgency. Instantly see what is Due Today, Due Soon, or Upcoming with color-coded chips.</p>
+            </div>
+
+            <div style="background: #ffffff; padding: 2.25rem; border-radius: 20px; border: 1px solid #eef2f6; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+                <div style="font-size: 2.5rem; font-weight: 800; color: #dbeafe; line-height: 1; margin-bottom: 1rem;">03</div>
+                <h4 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Submit &amp; Apply</h4>
+                <p style="font-size: 0.95rem; color: #64748b; line-height: 1.6;">Register for campus placement drives, submit laboratory assignments, and ask Gemini AI for guidance with a single click.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roles Portals Section -->
+    <section id="roles" class="modern-section">
+        <div class="section-head-center">
+            <span class="section-tag-pill">Institutional Workflows</span>
+            <h2 class="section-title-modern">Designed for Every Campus Role</h2>
+            <p class="section-subtitle-modern">Dedicated dashboards and customized permissions for students, professors, coordinators, and administrators.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+            <!-- Student -->
+            <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column;">
+                <span style="display: inline-block; background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-self: flex-start;">Student Portal</span>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Students</h4>
+                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem; flex: 1;">Track assignments, filter by urgency, apply to placement opportunities, and chat with AI.</p>
+                <a th:href="@{/login}" style="color: #2563eb; font-weight: 700; font-size: 0.875rem; text-decoration: none;">Access Portal &rarr;</a>
+            </div>
+
+            <!-- Faculty -->
+            <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column;">
+                <span style="display: inline-block; background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-self: flex-start;">Faculty Portal</span>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Faculty</h4>
+                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem; flex: 1;">Broadcast assignments to target sections, extend submission dates, and track student completion.</p>
+                <a th:href="@{/login}" style="color: #2563eb; font-weight: 700; font-size: 0.875rem; text-decoration: none;">Access Portal &rarr;</a>
+            </div>
+
+            <!-- Coordinator -->
+            <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column;">
+                <span style="display: inline-block; background: #ccfbf1; color: #115e59; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-self: flex-start;">Placement Cell</span>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Coordinators</h4>
+                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem; flex: 1;">Post recruitment drives, hackathons, and internships with cutoffs and eligibility criteria.</p>
+                <a th:href="@{/login}" style="color: #2563eb; font-weight: 700; font-size: 0.875rem; text-decoration: none;">Access Portal &rarr;</a>
+            </div>
+
+            <!-- Admin -->
+            <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column;">
+                <span style="display: inline-block; background: #fce7f3; color: #9d174d; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 1rem; align-self: flex-start;">Administration</span>
+                <h4 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Administration</h4>
+                <p style="font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 1.25rem; flex: 1;">Manage institutional data, branch sections, audit logs, and system metrics stored in MySQL.</p>
+                <a th:href="@{/login}" style="color: #2563eb; font-weight: 700; font-size: 0.875rem; text-decoration: none;">Access Portal &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Gemini AI Showcase Section -->
+    <section id="gemini-ai" class="modern-section" style="padding-top: 1rem;">
+        <div class="gemini-ai-card-wrapper">
+            <div class="ai-card-grid">
+                <div>
+                    <div class="ai-badge">
+                        <span>✨</span>
+                        <span>Spring AI • Google Gemini 2.5 Flash</span>
+                    </div>
+                    <h3 style="font-size: 2.25rem; font-weight: 800; line-height: 1.15; margin-bottom: 1rem;">
+                        Meet Your Intelligent Academic Assistant
+                    </h3>
+                    <p style="font-size: 1.05rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.75rem;">
+                        Integrated directly with Spring AI and Google GenAI. Ask questions about assignment prioritization, interview preparation for placement drives, or project checklists.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                        <button onclick="fillPrompt('How should I prioritize my upcoming assignments?')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1; padding: 0.4rem 0.85rem; border-radius: 9999px; font-size: 0.8rem; cursor: pointer;">💡 Prioritize Assignments</button>
+                        <button onclick="fillPrompt('Tips for TCS National Qualifier Test placement drive')" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1; padding: 0.4rem 0.85rem; border-radius: 9999px; font-size: 0.8rem; cursor: pointer;">🎯 Placement Preparation</button>
+                        <a th:href="@{/ai-chat}" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #2563eb; color: #ffffff; padding: 0.45rem 1.1rem; border-radius: 9999px; font-size: 0.825rem; font-weight: 700; text-decoration: none; margin-left: 0.5rem;">Launch Full AI Studio (Memory &amp; RAG) &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Live Prompt Box -->
+                <div class="ai-chat-demo-box">
+                    <div class="ai-input-row">
+                        <input type="text" id="landingAiInput" class="ai-query-input" placeholder="Ask Gemini AI anything..." value="How should I organize my study schedule for mid-terms?">
+                        <button id="landingAiBtn" class="btn-ai-send" onclick="sendLandingAiPrompt()">Send</button>
+                    </div>
+                    <div id="landingAiOutput" class="ai-answer-window">
+                        Click 'Send' or enter a question to query the Gemini AI ChatController via Spring AI!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating AI Chat Widget -->
+    <div class="floating-ai-widget">
+        <div class="floating-ai-trigger" onclick="toggleFloatingChat()" title="Chat with Gemini AI">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+
+        <div id="floatingChatModal" class="floating-chat-modal">
+            <div class="chat-modal-header">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span>✨</span>
+                    <span style="font-weight: 700; font-size: 0.95rem;">DeadlineIQ AI Assistant</span>
+                </div>
+                <button onclick="toggleFloatingChat()" style="background: none; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="floatingChatBody" class="chat-modal-body">
+                <div class="chat-msg chat-msg-bot">
+                    Hello! I am your AI academic advisor powered by Google Gemini. How can I assist you with your deadlines today?
+                </div>
+            </div>
+            <div class="chat-modal-footer">
+                <input type="text" id="floatingChatInput" placeholder="Ask AI..." style="flex: 1; border: 1px solid #cbd5e1; border-radius: 9999px; padding: 0.5rem 1rem; font-size: 0.85rem; outline: none;" onkeydown="if(event.key==='Enter') sendFloatingAiMsg()">
+                <button onclick="sendFloatingAiMsg()" style="background: #2563eb; color: #ffffff; border: none; border-radius: 9999px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.85rem; cursor: pointer;">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Footer -->
+    <footer style="background: #ffffff; border-top: 1px solid #eef2f6; padding: 3rem 0; margin-top: 3rem;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 32px; height: 32px; background: #0f172a; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 0.8rem;">
+                    IQ
+                </div>
+                <span style="font-weight: 800; color: #0f172a; font-size: 1.1rem;">DeadlineIQ</span>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.5rem;">• Department of Computer Science &amp; Engineering</span>
+            </div>
+            <div style="color: #64748b; font-size: 0.85rem;">
+                &copy; 2026-27 Academic Year. Powered by Spring Boot, MySQL &amp; Google Gemini AI.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive AI Scripts -->
+    <script>
+        function fillPrompt(text) {
+            document.getElementById('landingAiInput').value = text;
+            sendLandingAiPrompt();
+        }
+
+        async function sendLandingAiPrompt() {
+            const input = document.getElementById('landingAiInput');
+            const output = document.getElementById('landingAiOutput');
+            const btn = document.getElementById('landingAiBtn');
+            const query = input.value.trim();
+            if (!query) return;
+
+            btn.disabled = true;
+            btn.innerText = 'Thinking...';
+            output.innerText = 'Connecting to Gemini AI...';
+
+            try {
+                const res = await fetch('/api/chat?message=' + encodeURIComponent(query));
+                const text = await res.text();
+                output.innerText = text;
+            } catch (err) {
+                output.innerText = 'Error querying Gemini AI: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Send';
+            }
+        }
+
+        function toggleFloatingChat() {
+            const modal = document.getElementById('floatingChatModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function sendFloatingAiMsg() {
+            const input = document.getElementById('floatingChatInput');
+            const body = document.getElementById('floatingChatBody');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            // Append user message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-msg chat-msg-user';
+            userBubble.innerText = msg;
+            body.appendChild(userBubble);
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            // Typing indicator
+            const botBubble = document.createElement('div');
+            botBubble.className = 'chat-msg chat-msg-bot';
+            botBubble.innerText = 'Thinking...';
+            body.appendChild(botBubble);
+            body.scrollTop = body.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat?message=' + encodeURIComponent(msg));
+                const text = await res.text();
+                botBubble.innerText = text;
+            } catch (err) {
+                botBubble.innerText = 'Unable to reach AI assistant. ' + err.message;
+            }
+            body.scrollTop = body.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>

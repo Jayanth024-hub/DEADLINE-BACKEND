@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Portal — DeadlineIQ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-badge">IQ</div>
+            <span class="sidebar-title">DeadlineIQ</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Recruitment Drives</a></li>
+            <li><a href="#">Hackathons &amp; Events</a></li>
+            <li><a href="#">Candidate Registrations</a></li>
+            <li><a href="#">Coordinator Profile</a></li>
+        </ul>
+        <div class="sidebar-bottom">
+            <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="width: 100%; border-color: #334155; color: #f87171; background: transparent;">
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <div class="app-main">
+        <header class="app-header">
+            <div class="header-user-info">
+                <h4>Welcome, <span th:text="${user.name}">Coordinator</span></h4>
+                <p th:text="${user.department}">Placement &amp; Training Cell</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="role-pill-sm badge-status badge-due-soon">COORDINATOR</span>
+                <a th:href="@{/logout}" onclick="logoutUser()" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca; font-weight: 500;">
+                    Sign Out
+                </a>
+            </div>
+        </header>
+
+        <main class="app-body">
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <span class="caption">Total Opportunities</span>
+                    <span class="value" th:text="${totalOpportunities}">14</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Active Drives</span>
+                    <span class="value" style="color: #16a34a;" th:text="${activeDrives}">6</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Upcoming Events</span>
+                    <span class="value" style="color: #2563eb;" th:text="${upcomingEvents}">4</span>
+                </div>
+                <div class="metric-card">
+                    <span class="caption">Student Registrations</span>
+                    <span class="value" style="color: #1e3a8a;" th:text="${totalRegistrations}">240</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">Active Placement Drives &amp; Campus Hackathons</span>
+                    <button class="btn btn-primary btn-sm">+ Post New Opportunity</button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Opportunity / Company</th>
+                            <th>Eligibility Cutoff</th>
+                            <th>Reg. Deadline</th>
+                            <th>Drive Date</th>
+                            <th>Applicants</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="task-title">TCS National Qualifier Test (NQT)</div>
+                                <div class="task-sub">Tata Consultancy Services • On-Campus</div>
+                            </td>
+                            <td>B.Tech (CSE, IT, ECE) • 7.0 CGPA</td>
+                            <td>26 Sep 2026</td>
+                            <td>05 Oct 2026</td>
+                            <td>114 registered</td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">View List</button>
+                                <button class="btn btn-outline btn-sm">Edit</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="task-title">Smart India Hackathon 2026 Campus Round</div>
+                                <div class="task-sub">Ministry of Education • Internal Hackathon</div>
+                            </td>
+                            <td>All B.Tech Batches • Teams of 6</td>
+                            <td>02 Oct 2026</td>
+                            <td>12 Oct 2026</td>
+                            <td>38 teams</td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">View List</button>
+                                <button class="btn btn-outline btn-sm">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+</div>
+
+<script>
+    function logoutUser() {
+        localStorage.removeItem('deadlineiq_token');
+        localStorage.removeItem('deadlineiq_user');
+    }
+</script>
+
+</body>
+</html>
