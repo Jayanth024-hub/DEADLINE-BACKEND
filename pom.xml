@@ -75,6 +75,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- In-memory database fallback when MySQL environment variables are unavailable -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- PDF Processing -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
