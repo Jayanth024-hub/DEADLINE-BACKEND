@@ -4,6 +4,7 @@ import com.deadlineiq.model.Role;
 import com.deadlineiq.model.User;
 import com.deadlineiq.repository.UserRepository;
 import com.deadlineiq.util.PasswordUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,18 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final Map<String, User> activeTokens = new ConcurrentHashMap<>();
 
-    private static final String TOKEN_SECRET = "DeadlineIQ_AuthSecretKey_CSE_2026_Secure_Token";
+    private final String tokenSecret;
     private final Set<String> invalidatedTokens = ConcurrentHashMap.newKeySet();
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            @Value("${TOKEN_SECRET:}") String tokenSecret) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenSecret = (tokenSecret != null && !tokenSecret.isBlank())
+                ? tokenSecret
+                : System.getenv().getOrDefault("TOKEN_SECRET", "");
     }
 
     public Optional<User> authenticate(String email, String plainPassword) {
@@ -64,7 +71,7 @@ public class UserService {
     public String generateApiToken(User user) {
         long timestamp = System.currentTimeMillis();
         String payload = user.getId() + ":" + user.getEmail() + ":" + timestamp;
-        String signature = hmacSha256(payload, TOKEN_SECRET);
+        String signature = hmacSha256(payload, tokenSecret);
         String token = "Bearer-" + Base64.getUrlEncoder().withoutPadding().encodeToString((payload + ":" + signature).getBytes(java.nio.charset.StandardCharsets.UTF_8));
         
         // Bound cache size to prevent memory bloat
@@ -99,7 +106,7 @@ public class UserService {
                 String signature = parts[3];
 
                 String payload = userId + ":" + email + ":" + timestamp;
-                String expectedSig = hmacSha256(payload, TOKEN_SECRET);
+                String expectedSig = hmacSha256(payload, tokenSecret);
                 if (expectedSig.equals(signature)) {
                     // Valid cryptographic token: fetch fresh user from MySQL
                     Optional<User> userOpt = userRepository.findById(userId);

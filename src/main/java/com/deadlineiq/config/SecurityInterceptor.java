@@ -47,7 +47,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
                 || uri.equals("/api/auth/login") || uri.equals("/auth/login")
                 || uri.equals("/api/auth/register") || uri.equals("/auth/register")
                 || uri.equals("/api/auth/me") || uri.equals("/auth/me")
-                || uri.equals("/api/rag/status")) {
+                || uri.equals("/api/rag/status") || uri.equals("/api/health")) {
             return true;
         }
 
